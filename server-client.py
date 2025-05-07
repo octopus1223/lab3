@@ -3,10 +3,12 @@ import threading
 from datetime import datetime, timedelta
 
 class TupleSpaceServer:
+    #define the constructor
     def __init__(self,port):
         self.port = port
         self.tuple_space = ()
         self.lock = threading.Lock()
+        #initialize the status of some indicators
         self.status = {
             "total_clients": 0,
             "total_operations": 0,
@@ -14,9 +16,12 @@ class TupleSpaceServer:
             "put": 0,
             "errors": 0
         }
+        #initialize the time
         self.last_report_time = datetime.now()
     
+    #define the main loop of server
     def Start(self):
+        #Create and configure a socket 
         with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as s:
             s.blind(('0.0.0.0', self.port))
             s.listen()
