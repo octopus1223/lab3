@@ -106,3 +106,23 @@ class TupleSpaceServer:
             except Exception as e :
                 self.stats["errors"] += 1
                 return "005 ERR invalid request"
+
+    def report_stats(self):
+        with self.lock:
+            total_tuples = len(self.tuple_space)
+            avg_tuple_size = sum(len(k) + len(v) for k, v in self.tuple_space.items())/total_tuples if total_tuples > 0 else 0
+            avg_key_size = sum(len(k) for k in self.tuple_space)/total_tuples if total_tuples>0 else 0
+            avg_value_size = sum(len(v) for v in self.tuple_space.values())/total_tuples if total_tuples > 0 else 0
+
+            print("\n=== Server Statistics ===")
+            print(f"Tuples:{total_tuples}")
+            print(f"Avg tuple size :{avg_tuple_size:.2f}")
+            print(f"Avg key size:{avg_key_size:.2f}")
+            print(f"Avg value size:{avg_value_size:.2f}")
+            print(f"total clients:{self.stats['total_clients']}")
+            print(f"total operations:{self.stats['total_operations']}")
+            print(f"READS:{self.stats['read']}")
+            print(f"GETS:{self.stats['get']}")
+            print(f"PUTS:{self.stats['put']}")
+            print(f"Errors:{self.stats['errors']}")
+            print("======================\n")
