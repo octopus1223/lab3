@@ -39,6 +39,20 @@ class TupleSpaceServer:
                 if datatime.now() - self.last_report_time >= timedelta(seconds = 10):
                     self.report_status()
                     self.last_report_time = detertime.now()
-                
+    #Use the client handling function
+    def handle_client(self,conn,addr):
+        with conn:
+            print(f"Connected by{addr}")
+            while True:
+                try:
+                    data = conn.recv(1024).decode('utf-8')
+                    if not data:
+                        break
 
-            
+                    reponse = self.process_request(data)
+                    conn.sendall(response.encode('utf-8'))
+
+                except Exception as e:
+                    print(f"Error with client{addr}:{e}")
+                    break
+        print(f"Client{addr} disconnected")
