@@ -36,9 +36,9 @@ class TupleSpaceServer:
                 )
                 client_threads.start()
 
-                if datatime.now() - self.last_report_time >= timedelta(seconds = 10):
+                if datetime.now() - self.last_report_time >= timedelta(seconds = 10):
                     self.report_status()
-                    self.last_report_time = detertime.now()
+                    self.last_report_time = datetime.now()
     #Use the client handling function
     def handle_client(self,conn,addr):
         with conn:
@@ -49,7 +49,7 @@ class TupleSpaceServer:
                     if not data:
                         break
 
-                    reponse = self.process_request(data)
+                    response = self.process_request(data)
                     conn.sendall(response.encode('utf-8'))
 
                 except Exception as e:
@@ -99,10 +99,10 @@ class TupleSpaceServer:
                     with self.lock:
                         if key in self.tuple_space:
                             self.stats['errors']+= 1
-                            return f'{len(f'ERR{key}already exosts')+3:03d}ERR{key} already exists'
+                            return f"{len(f'ERR{key}already exists')+3:03d}ERR{key} already exists"
                         else:
                             self.tuple_space[key] = value
-                            return f"{len(f"OK({key},{value})added")+3:03d} OK({key},{value})adde"
+                            return f"{len(f'OK({key},{value})added')+3:03d} OK({key},{value})added"
             except Exception as e :
                 self.stats["errors"] += 1
                 return "005 ERR invalid request"
